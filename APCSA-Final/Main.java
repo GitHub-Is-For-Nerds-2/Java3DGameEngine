@@ -5,10 +5,7 @@
 public class Main
 {    
     public static void main()
-    {
-        Window window = new Window();
-        window.window();
-        
+    {   
         Loop loop = new Loop();
         loop.start();
     }

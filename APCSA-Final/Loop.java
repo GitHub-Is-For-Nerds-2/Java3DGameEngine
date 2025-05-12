@@ -1,15 +1,22 @@
-
-public class Loop implements Runnable         //Runnable enables threading
+public class Loop implements Runnable           //Runnable enables threading
 {
-    private static Thread thread;               //Object to have multiple things
+    public static final int WIDTH = 1920;
+    public static final int HEIGHT = 1080;
+    
+    private Thread thread;                      //Object to have multiple things
                                                 //running at the same time
-    private static boolean isRunning = false;   //Control System Loop
+    private boolean isRunning = false;          //Control System Loop
+    
+    private Render render;                      //Access the render pipeline
     
     public void start()
     {
         if(isRunning) { return; }               //Check if the game is already running.
                                                 //If it is, exit start so code doesn't 
                                                 //rerun, else start the game.
+                                                
+        Window window = new Window();           //Create window
+        window.window(WIDTH, HEIGHT);
                                                 
         isRunning = true;                       //Set isRunning true for previouis check
         
@@ -23,8 +30,18 @@ public class Loop implements Runnable         //Runnable enables threading
     {
         while(isRunning)
         {
-                        
+            tick();
         }
+    }
+    
+    private void tick()
+    {
+        
+    }
+    
+    private void render()
+    {
+        render = new Render(WIDTH, HEIGHT);
     }
     
     private void stop()

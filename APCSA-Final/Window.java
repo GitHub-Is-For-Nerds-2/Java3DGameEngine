@@ -6,10 +6,10 @@ public class Window
 {
     private static JFrame window = new JFrame(); 
     
-    public static void window()
+    public static void window(int width, int height)
     {
         window.setTitle("VantaEngine");
-        window.setSize(1920, 1080);
+        window.setSize(width, height);
         window.setLocationRelativeTo(null);
         window.setResizable(true);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
