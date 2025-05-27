@@ -1,0 +1,29 @@
+
+import java.awt.*;
+
+public class PolygonObject
+{
+    Polygon polygon;
+    Color color;
+
+    public PolygonObject(double[] x, double[] y, Color color)
+    {
+        Screen.numberOfPolygons++;  //Increase the scene count in screen class each time object is created
+        polygon = new Polygon();
+        
+        //Loop through x and y and add them to shape
+        for(int i = 0; i < x.length; i++)
+        {
+            polygon.addPoint((int)x[i], (int)y[i]);
+        }
+
+        color = color;
+    }
+
+    void drawPolygon(Graphics graphics)
+    {
+        graphics.setColor(color);
+
+        graphics.fillPolygon(polygon);
+    }
+}
