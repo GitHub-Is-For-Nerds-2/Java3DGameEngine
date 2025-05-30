@@ -130,7 +130,7 @@ public class Screen extends JPanel implements KeyListener
     }
     
     void control()
-    {
+{
     Vector viewVector = new Vector(viweTo[0] - viewFrom[0], viweTo[1] - viewFrom[1], viweTo[2] - viewFrom[2]);
     
     // Up/Down movement (W/S)
@@ -183,55 +183,77 @@ public class Screen extends JPanel implements KeyListener
     }
 
     // Camera rotation with arrow keys
-    double rotationSpeed = 0.05; // Adjust rotation speed as needed
-    if(keys[0]) // Left arrow (yaw left)
+    double rotationSpeed = 0.05; // Radians per frame
+    double dist = Math.sqrt(
+        (viweTo[0] - viewFrom[0]) * (viweTo[0] - viewFrom[0]) +
+        (viweTo[1] - viewFrom[1]) * (viweTo[1] - viewFrom[1]) +
+        (viweTo[2] - viewFrom[2]) * (viweTo[2] - viewFrom[2])
+    );
+
+    if(keys[0] || keys[1]) // Left/Right arrow (yaw)
     {
-        // Rotate viweTo around viewFrom (yaw)
+        double yaw = keys[0] ? -rotationSpeed : rotationSpeed; // Left: negative, Right: positive
+        // Rotate around global Z-axis
         double dx = viweTo[0] - viewFrom[0];
         double dy = viweTo[1] - viewFrom[1];
-        double angle = Math.atan2(dy, dx);
-        angle -= rotationSpeed; // Rotate left
-        double dist = Math.sqrt(dx * dx + dy * dy);
-        viweTo[0] = viewFrom[0] + dist * Math.cos(angle);
-        viweTo[1] = viewFrom[1] + dist * Math.sin(angle);
+        // Apply 2D rotation in XY plane
+        viweTo[0] = viewFrom[0] + dx * Math.cos(yaw) - dy * Math.sin(yaw);
+        viweTo[1] = viewFrom[1] + dx * Math.sin(yaw) + dy * Math.cos(yaw);
+        // Z remains unchanged for yaw
     }
-    
-    if(keys[1]) // Right arrow (yaw right)
+
+    if(keys[2] || keys[3]) // Up/Down arrow (pitch)
     {
-        // Rotate viweTo around viewFrom (yaw)
+        double pitch = keys[2] ? -rotationSpeed : rotationSpeed; // Up: negative, Down: positive
+        // Compute local right vector (cross product of viewVector and global up)
+        Vector upVector = new Vector(0, 0, 1);
+        Vector rightVector = viewVector.crossProduct(upVector);
+        // Handle degenerate case when viewVector is parallel to upVector
+        if (rightVector.x == 0 && rightVector.y == 0 && rightVector.z == 0) {
+            rightVector = new Vector(1, 0, 0); // Fallback to X-axis
+        }
+        // Normalize rightVector
+        double rightLength = Math.sqrt(rightVector.x * rightVector.x + rightVector.y * rightVector.y + rightVector.z * rightVector.z);
+        if (rightLength > 0) {
+            rightVector.x /= rightLength;
+            rightVector.y /= rightLength;
+            rightVector.z /= rightLength;
+        }
+        // Rotate viewVector around rightVector using Rodrigues' rotation formula
         double dx = viweTo[0] - viewFrom[0];
         double dy = viweTo[1] - viewFrom[1];
-        double angle = Math.atan2(dy, dx);
-        angle += rotationSpeed; // Rotate right
-        double dist = Math.sqrt(dx * dx + dy * dy);
-        viweTo[0] = viewFrom[0] + dist * Math.cos(angle);
-        viweTo[1] = viewFrom[1] + dist * Math.sin(angle);
-    }
-    
-    if(keys[2]) // Up arrow (pitch up)
-    {
-        // Rotate viweTo around viewFrom (pitch)
-        double dx = viweTo[0] - viewFrom[0];
         double dz = viweTo[2] - viewFrom[2];
-        double angle = Math.atan2(dz, dx);
-        angle -= rotationSpeed; // Pitch up
-        double dist = Math.sqrt(dx * dx + dz * dz);
-        viweTo[0] = viewFrom[0] + dist * Math.cos(angle);
-        viweTo[2] = viewFrom[2] + dist * Math.sin(angle);
+        double cosTheta = Math.cos(pitch);
+        double sinTheta = Math.sin(pitch);
+        // Rodrigues' rotation: v' = v * cosθ + (k × v) * sinθ + k * (k · v) * (1 - cosθ)
+        double kDotV = rightVector.x * dx + rightVector.y * dy + rightVector.z * dz;
+        double crossX = rightVector.y * dz - rightVector.z * dy;
+        double crossY = rightVector.z * dx - rightVector.x * dz;
+        double crossZ = rightVector.x * dy - rightVector.y * dx;
+        double newDx = dx * cosTheta + crossX * sinTheta + rightVector.x * kDotV * (1 - cosTheta);
+        double newDy = dy * cosTheta + crossY * sinTheta + rightVector.y * kDotV * (1 - cosTheta);
+        double newDz = dz * cosTheta + crossZ * sinTheta + rightVector.z * kDotV * (1 - cosTheta);
+        // Update viweTo, preserving distance
+        double newDist = Math.sqrt(newDx * newDx + newDy * newDy + newDz * newDz);
+        if (newDist > 0) {
+            newDx = newDx * dist / newDist;
+            newDy = newDy * dist / newDist;
+            newDz = newDz * dist / newDist;
+        }
+        viweTo[0] = viewFrom[0] + newDx;
+        viweTo[1] = viewFrom[1] + newDy;
+        viweTo[2] = viewFrom[2] + newDz;
+        // Clamp pitch to prevent flipping
+        if (Math.abs(viweTo[2] - viewFrom[2]) > dist * 0.99) {
+            viweTo[2] = viewFrom[2] + (viweTo[2] > viewFrom[2] ? dist * 0.99 : -dist * 0.99);
+            // Adjust X and Y to maintain distance
+            double remainingDist = Math.sqrt(dist * dist - (viweTo[2] - viewFrom[2]) * (viweTo[2] - viewFrom[2]));
+            double oldAngle = Math.atan2(dy, dx);
+            viweTo[0] = viewFrom[0] + remainingDist * Math.cos(oldAngle);
+            viweTo[1] = viewFrom[1] + remainingDist * Math.sin(oldAngle);
+        }
     }
-    
-    if(keys[3]) // Down arrow (pitch down)
-    {
-        // Rotate viweTo around viewFrom (pitch)
-        double dx = viweTo[0] - viewFrom[0];
-        double dz = viweTo[2] - viewFrom[2];
-        double angle = Math.atan2(dz, dx);
-        angle += rotationSpeed; // Pitch down
-        double dist = Math.sqrt(dx * dx + dz * dz);
-        viweTo[0] = viewFrom[0] + dist * Math.cos(angle);
-        viweTo[2] = viewFrom[2] + dist * Math.sin(angle);
-    }
-    }
+}
     
     //Overrides of the KeyListener
     public void keyPressed(KeyEvent key)
