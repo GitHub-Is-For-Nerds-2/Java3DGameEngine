@@ -23,10 +23,14 @@ public class Calculator
         Vector planeVector1 = viewVector.crossProduct(directionVector);
         Vector planeVector2 = viewVector.crossProduct(planeVector1);
         
+        Vector rotationVector = getRotationVector(viewFrom, viewTo);
+        Vector weirdVector1 = viewVector.crossProduct(rotationVector);
+        Vector weirdVector2 = viewVector.crossProduct(weirdVector1);
+        
         //Get point we are looking at (trying to calculate)
         Vector viewToPoint = new Vector(x - viewFrom[0], y - viewFrom[1], z - viewFrom[2]);
         
-        //Find where vector meets plane
+        //Find where vector meets plane.
         double t = (viewVector.x*viewTo[0] + viewVector.y*viewTo[1] + viewVector.z*viewTo[2]
                  - (viewVector.x*viewFrom[0] + viewVector.y*viewFrom[1] + viewVector.z*viewFrom[2]))
                  / (viewVector.x*viewToPoint.x + viewVector.y*viewToPoint.y + viewVector.z*viewToPoint.z);
@@ -38,8 +42,32 @@ public class Calculator
         
         if(t >= 0)
         {
-            drawX = planeVector2.x * x + planeVector2.y * y + planeVector2.z * z;
-            drawY = planeVector1.x * x + planeVector1.y * y + planeVector1.z * z;
+            drawX = weirdVector2.x * x + weirdVector2.y * y + weirdVector2.z * z;
+            drawY = weirdVector1.x * x + weirdVector1.y * y + weirdVector1.z * z;
         }
+    }
+    
+    static Vector getRotationVector(double[] viewFrom, double[] viewTo)
+    {
+        double dx = Math.abs(viewFrom[0]-viewTo[0]);
+        double dy = Math.abs(viewFrom[1]-viewTo[1]);
+        double xRot, yRot;
+        
+        xRot = dy/(dx + dy);
+        yRot = dx/(dx + dy);
+        
+        if(viewFrom[1] > viewTo[1])
+        {
+            xRot = -xRot;
+        }
+        
+        if(viewFrom[0] < viewTo[0])
+        {
+            yRot = -yRot;
+        }
+        
+        Vector v = new Vector(xRot, yRot, 0);
+        
+        return v;
     }
 }

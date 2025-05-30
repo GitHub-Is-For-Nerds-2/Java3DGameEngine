@@ -7,6 +7,9 @@ public class Main extends JFrame
 {
     static JFrame frame = new Main();
     Screen screen = new Screen();
+    
+    static public int SCREEN_WIDTH = 1920;
+    static public int SCREEN_HEIGHT = 1080;
 
     public Main()
     {
@@ -15,7 +18,9 @@ public class Main extends JFrame
         setTitle("VantaEngine");
         setSize(1920, 1080);
         setLocationRelativeTo(null);
-        setResizable(true);
+        setResizable(false);                            //Resizable is false because of 
+                                                        //static srceen size on the frame
+                                                        //redraw
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Move to own method because this adds screen to window
