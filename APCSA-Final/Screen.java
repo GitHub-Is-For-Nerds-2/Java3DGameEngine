@@ -39,9 +39,9 @@ public class Screen extends JPanel implements KeyListener
                 DPolygons[numberOf3DPolygons] = new DPolygon(new double[]{i, i, i + 1, i + 1}, new double[]{j, j + 1, j + 1, j}, new double[]{0, 0, 0, 0}, Color.green);
             }
         }
-
+        
+        setFocusable(true);     //Make the window be the main window
         addKeyListener(this);   //Add the key listener to this instance
-        setFocusable(true);     //Make the window be the main window 
     }
 
     //Where objects are drawn
@@ -49,8 +49,7 @@ public class Screen extends JPanel implements KeyListener
     {
         control();
         
-        graphics.clearRect(0, 0, 1920, 1080);         //Clear screen for redraw (x, y, screen size x, screen size y)
-                                                              //TODO: Make screen size a global variable
+        graphics.clearRect(0, 0, Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);         //Clear screen for redraw (x, y, screen size x, screen size y)
 
         graphics.drawString(System.currentTimeMillis() + "", 20, 20);
 
