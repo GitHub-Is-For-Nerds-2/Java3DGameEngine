@@ -5,8 +5,14 @@ import javax.swing.*;
 
 public class Window extends JFrame
 {   
-    public Window(int screenWidth, int screenHeight, Screen screen)
+    public static int screenWidth;
+    public static int screenHeight;
+    
+    public Window(int width, int height, Screen screen)
     {
+        screenWidth = width;
+        screenHeight = height;
+        
         setTitle("VantaEngine");
         setSize(screenWidth, screenHeight);
         setLocationRelativeTo(null);
