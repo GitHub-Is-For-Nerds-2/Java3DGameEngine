@@ -1,9 +1,8 @@
 import java.awt.*;
-import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class Screen extends JPanel implements KeyListener
+public class Screen extends JPanel
 {
     double sleepTime = 1000/30, lastRefresh = 0; //FPS Cap (30), last frame
 
@@ -17,11 +16,11 @@ public class Screen extends JPanel implements KeyListener
     
     int[] newOrder;
     
-    boolean[] keys = new boolean[10];
+    InputManager inputManager;
 
     //Where objects on screen are initilized
     //Called in main method when Screen object is created
-    public Screen()
+    public Screen(InputManager inputManager)
     {
         //Generate cube
         DPolygons[numberOf3DPolygons] = new DPolygon(new double[]{0, 2, 2, 0}, new double[]{0, 0, 2, 2}, new double[]{0, 0, 0, 0}, Color.gray);
@@ -40,8 +39,11 @@ public class Screen extends JPanel implements KeyListener
             }
         }
         
+        addKeyListener(inputManager);   //Add the key listener to this instance
+        
+        this.inputManager = inputManager;
+        
         setFocusable(true);     //Make the window be the main window
-        addKeyListener(this);   //Add the key listener to this instance
     }
 
     //Where objects are drawn
@@ -133,7 +135,7 @@ public class Screen extends JPanel implements KeyListener
     Vector viewVector = new Vector(viweTo[0] - viewFrom[0], viweTo[1] - viewFrom[1], viweTo[2] - viewFrom[2]);
     
     // Up/Down movement (W/S)
-    if(keys[4]) // W
+    if(inputManager.key[4]) // W
     {
         viewFrom[0] += viewVector.x;
         viewFrom[1] += viewVector.y;
@@ -144,7 +146,7 @@ public class Screen extends JPanel implements KeyListener
         viweTo[2] += viewVector.z;
     }
     
-    if(keys[6]) // S
+    if(inputManager.key[6]) // S
     {
         viewFrom[0] -= viewVector.x;
         viewFrom[1] -= viewVector.y;
@@ -159,7 +161,7 @@ public class Screen extends JPanel implements KeyListener
     Vector verticalVector = new Vector(0, 0, 1);
     Vector sideViewVector = viewVector.crossProduct(verticalVector);
     
-    if(keys[5]) // A
+    if(inputManager.key[5]) // A
     {
         viewFrom[0] += sideViewVector.x;
         viewFrom[1] += sideViewVector.y;
@@ -170,7 +172,7 @@ public class Screen extends JPanel implements KeyListener
         viweTo[2] += sideViewVector.z;
     }
     
-    if(keys[7]) // D
+    if(inputManager.key[7]) // D
     {
         viewFrom[0] -= sideViewVector.x;
         viewFrom[1] -= sideViewVector.y;
@@ -189,9 +191,9 @@ public class Screen extends JPanel implements KeyListener
         (viweTo[2] - viewFrom[2]) * (viweTo[2] - viewFrom[2])
     );
 
-    if(keys[0] || keys[1]) // Left/Right arrow (yaw)
+    if(inputManager.key[0] || inputManager.key[1]) // Left/Right arrow (yaw)
     {
-        double yaw = keys[0] ? -rotationSpeed : rotationSpeed; // Left: negative, Right: positive
+        double yaw = inputManager.key[0] ? -rotationSpeed : rotationSpeed; // Left: negative, Right: positive
         // Rotate around global Z-axis
         double dx = viweTo[0] - viewFrom[0];
         double dy = viweTo[1] - viewFrom[1];
@@ -201,9 +203,9 @@ public class Screen extends JPanel implements KeyListener
         // Z remains unchanged for yaw
     }
 
-    if(keys[2] || keys[3]) // Up/Down arrow (pitch)
+    if(inputManager.key[2] || inputManager.key[3]) // Up/Down arrow (pitch)
     {
-        double pitch = keys[2] ? -rotationSpeed : rotationSpeed; // Up: negative, Down: positive
+        double pitch = inputManager.key[2] ? -rotationSpeed : rotationSpeed; // Up: negative, Down: positive
         // Compute local right vector (cross product of viewVector and global up)
         Vector upVector = new Vector(0, 0, 1);
         Vector rightVector = viewVector.crossProduct(upVector);
@@ -253,96 +255,4 @@ public class Screen extends JPanel implements KeyListener
         }
     }
 }
-    
-    //Overrides of the KeyListener
-    public void keyPressed(KeyEvent key)
-    {
-        if(key.getKeyCode() == KeyEvent.VK_LEFT)
-        {
-            keys[0] = true;
-        }
-
-        if(key.getKeyCode() == KeyEvent.VK_RIGHT)
-        {
-            keys[1] = true;
-        }
-
-        if(key.getKeyCode() == KeyEvent.VK_UP)
-        {
-            keys[2] = true;
-        }
-
-        if(key.getKeyCode() == KeyEvent.VK_DOWN)
-        {
-            keys[3] = true;
-        }
-        
-        if(key.getKeyCode() == KeyEvent.VK_W)
-        {
-            keys[4] = true;
-        }
-
-        if(key.getKeyCode() == KeyEvent.VK_A)
-        {
-            keys[5] = true;
-        }
-
-        if(key.getKeyCode() == KeyEvent.VK_S)
-        {
-            keys[6] = true;
-        }
-
-        if(key.getKeyCode() == KeyEvent.VK_D)
-        {
-            keys[7] = true;
-        }
-    }
-
-    public void keyReleased(KeyEvent key)
-    {
-        if(key.getKeyCode() == KeyEvent.VK_LEFT)
-        {
-            keys[0] = false;
-        }
-
-        if(key.getKeyCode() == KeyEvent.VK_RIGHT)
-        {
-            keys[1] = false;
-        }
-
-        if(key.getKeyCode() == KeyEvent.VK_UP)
-        {
-            keys[2] = false;
-        }
-
-        if(key.getKeyCode() == KeyEvent.VK_DOWN)
-        {
-            keys[3] = false;
-        }
-        
-        if(key.getKeyCode() == KeyEvent.VK_W)
-        {
-            keys[4] = false;
-        }
-
-        if(key.getKeyCode() == KeyEvent.VK_A)
-        {
-            keys[5] = false;
-        }
-
-        if(key.getKeyCode() == KeyEvent.VK_S)
-        {
-            keys[6] = false;
-        }
-
-        if(key.getKeyCode() == KeyEvent.VK_D)
-        {
-            keys[7] = false;
-        }
-    }
-
-    public void keyTyped(KeyEvent key)
-    {
-
-    }
 }

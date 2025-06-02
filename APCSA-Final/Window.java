@@ -2,10 +2,8 @@ import java.awt.*;
 import javax.swing.*;
 
 public class Window extends JFrame
-{
-    Screen screen = new Screen();
-    
-    public Window()
+{   
+    public Window(Screen screen)
     {
         setTitle("VantaEngine");
         setSize(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
@@ -14,7 +12,7 @@ public class Window extends JFrame
                                                         //redraw (painComponent() clearRect())
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        add(screen); 
+        add(screen);                                    //Add screen to window
 
         setVisible(true);
     }
