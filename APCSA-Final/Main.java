@@ -14,7 +14,7 @@ public class Main
     
     public static void main()
     {
-         screen = new Screen(input);                                        //Create screen and add the input manager to it
+         screen = new Screen(input);                          //Create screen and add the input manager to it
          window = new Window(width, height, screen);          //Create window and add the screen to it
     }
 }

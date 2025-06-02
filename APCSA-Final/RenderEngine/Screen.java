@@ -18,7 +18,7 @@ public class Screen extends JPanel
     
     int[] newOrder;
     
-    InputManager inputManager;
+    InputManager inputs;
     
     Camera camera;
 
@@ -45,7 +45,7 @@ public class Screen extends JPanel
         
         addKeyListener(inputManager);   //Add the key listener to this instance
         
-        this.inputManager = inputManager;
+        this.inputs = inputManager;
         
         camera = new Camera(inputManager);
         
