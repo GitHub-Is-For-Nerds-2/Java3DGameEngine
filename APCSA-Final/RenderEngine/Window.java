@@ -1,12 +1,14 @@
+package RenderEngine;
+
 import java.awt.*;
 import javax.swing.*;
 
 public class Window extends JFrame
 {   
-    public Window(Screen screen)
+    public Window(int screenWidth, int screenHeight, Screen screen)
     {
         setTitle("VantaEngine");
-        setSize(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
+        setSize(screenWidth, screenHeight);
         setLocationRelativeTo(null);
         setResizable(false);                            //Resizable is false because of static srceen size on the frame 
                                                         //redraw (painComponent() clearRect())

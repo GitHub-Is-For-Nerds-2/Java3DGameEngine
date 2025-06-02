@@ -1,6 +1,11 @@
+package RenderEngine;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
+import Math.*;
+import InputSystem.*;
 
 public class Screen extends JPanel
 {
@@ -51,7 +56,7 @@ public class Screen extends JPanel
     {
         control();
         
-        graphics.clearRect(0, 0, Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);         //Clear screen for redraw (x, y, screen size x, screen size y)
+        graphics.clearRect(0, 0, 1920, 1080);         //Clear screen for redraw (x, y, screen size x, screen size y)
 
         graphics.drawString(System.currentTimeMillis() + "", 20, 20);
 

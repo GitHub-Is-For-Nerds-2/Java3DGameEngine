@@ -1,6 +1,8 @@
+package Math;
+
 public class Vector
 {
-    double x = 0, y = 0, z = 0;
+    public double x = 0, y = 0, z = 0;
 
     public Vector(double x, double y, double z)
     {
@@ -15,7 +17,7 @@ public class Vector
         }
     }
 
-    Vector crossProduct(Vector vector)
+    public Vector crossProduct(Vector vector)
     {
         Vector crossVector = new Vector(y * vector.z - z * vector.y,
                                         z * vector.x - x * vector.z,

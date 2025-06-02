@@ -1,3 +1,5 @@
+package RenderEngine;
+
 import java.awt.*;
 
 public class DPolygon
@@ -40,8 +42,8 @@ public class DPolygon
         double[] newY = new double[x.length];
         for(int i = 0; i < x.length; i++)
         {
-            newX[i] = dx + Main.SCREEN_WIDTH/2 + 50 * Calculator.calculatePositionX(Screen.viewFrom, Screen.viweTo, x[i], y[i], z[i]);
-            newY[i] = dy + Main.SCREEN_HEIGHT/2 + 50 * Calculator.calculatePositionY(Screen.viewFrom, Screen.viweTo, x[i], y[i], z[i]);
+            newX[i] = dx + 1920/2 + 50 * Calculator.calculatePositionX(Screen.viewFrom, Screen.viweTo, x[i], y[i], z[i]);
+            newY[i] = dy + 1080/2 + 50 * Calculator.calculatePositionY(Screen.viewFrom, Screen.viweTo, x[i], y[i], z[i]);
         }
 
         Screen.drawablePolygons[poly] = new PolygonObject(newX, newY, color);
