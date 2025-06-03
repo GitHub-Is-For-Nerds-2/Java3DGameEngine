@@ -34,16 +34,16 @@ public class DPolygon
     void updatePolygon()
     {
         //Offset to center
-        double dx = - 50 * Calculator.calculatePositionX(Camera.viewFrom, Camera.viweTo, Camera.viweTo[0], Camera.viweTo[1], Camera.viweTo[2]);
-        double dy = - 50 * Calculator.calculatePositionY(Camera.viewFrom, Camera.viweTo, Camera.viweTo[0], Camera.viweTo[1], Camera.viweTo[2]);
+        double dx = - 50 * Calculator.calculatePositionX(Camera.camPos, Camera.camRot, Camera.camRot[0], Camera.camRot[1], Camera.camRot[2]);
+        double dy = - 50 * Calculator.calculatePositionY(Camera.camPos, Camera.camRot, Camera.camRot[0], Camera.camRot[1], Camera.camRot[2]);
         
         //Loop through the x values and get the screen pos of them related to the world pos
         double[] newX = new double[x.length];
         double[] newY = new double[x.length];
         for(int i = 0; i < x.length; i++)
         {
-            newX[i] = dx + Window.screenWidth/2 + 50 * Calculator.calculatePositionX(Camera.viewFrom, Camera.viweTo, x[i], y[i], z[i]);
-            newY[i] = dy + Window.screenHeight/2 + 50 * Calculator.calculatePositionY(Camera.viewFrom, Camera.viweTo, x[i], y[i], z[i]);
+            newX[i] = dx + RenderEngine.screenWidth/2 + 50 * Calculator.calculatePositionX(Camera.camPos, Camera.camRot, x[i], y[i], z[i]);
+            newY[i] = dy + RenderEngine.screenHeight/2 + 50 * Calculator.calculatePositionY(Camera.camPos, Camera.camRot, x[i], y[i], z[i]);
         }
 
         Screen.drawablePolygons[poly] = new PolygonObject(newX, newY, color);
@@ -64,8 +64,8 @@ public class DPolygon
     
     double getDistanceToP(int i)
     {
-        return Math.sqrt((Camera.viewFrom[0] - x[i])*(Camera.viewFrom[0] - x[i]) 
-                       + (Camera.viewFrom[1] - y[i])*(Camera.viewFrom[1] - y[i])
-                       + (Camera.viewFrom[2] - z[i])*(Camera.viewFrom[2] - z[i]));
+        return Math.sqrt((Camera.camPos[0] - x[i])*(Camera.camPos[0] - x[i]) 
+                       + (Camera.camPos[1] - y[i])*(Camera.camPos[1] - y[i])
+                       + (Camera.camPos[2] - z[i])*(Camera.camPos[2] - z[i]));
     }
 }

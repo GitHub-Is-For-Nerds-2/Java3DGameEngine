@@ -18,13 +18,11 @@ public class Screen extends JPanel
     
     int[] newOrder;
     
-    InputManager inputs;
-    
     Camera camera;
 
     //Where objects on screen are initilized
     //Called in main method when Screen object is created
-    public Screen(InputManager inputManager)
+    public Screen(InputSystem inputManager)
     {
         //Generate cube
         DPolygons[numberOf3DPolygons] = new DPolygon(new double[]{0, 2, 2, 0}, new double[]{0, 0, 2, 2}, new double[]{0, 0, 0, 0}, Color.gray);
@@ -43,13 +41,11 @@ public class Screen extends JPanel
             }
         }
         
-        addKeyListener(inputManager);   //Add the key listener to this instance
+        addKeyListener(inputManager);       //Add input listener to the window
         
-        this.inputs = inputManager;
+        camera = new Camera(inputManager);  //Send inputs to camera
         
-        camera = new Camera(inputManager);
-        
-        setFocusable(true);     //Make the window be the main window
+        setFocusable(true);                 //Make the window be the main window
     }
 
     //Where objects are drawn
@@ -57,7 +53,7 @@ public class Screen extends JPanel
     {
         camera.control();
         
-        graphics.clearRect(0, 0, Window.screenWidth, Window.screenHeight);         //Clear screen for redraw (x, y, screen size x, screen size y)
+        graphics.clearRect(0, 0, RenderEngine.screenWidth, RenderEngine.screenHeight);         //Clear screen for redraw (x, y, screen size x, screen size y)
 
         graphics.drawString(System.currentTimeMillis() + "", 20, 20);
 

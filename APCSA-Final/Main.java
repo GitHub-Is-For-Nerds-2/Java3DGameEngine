@@ -6,12 +6,12 @@ public class Main
     static int width = 1920;
     static int height = 1080;
     
-    static Window window;                               //Window object
+    static RenderEngine render;                         //Window object
     
-    static InputManager input = new InputManager();     //Input manager object
+    static InputSystem input = new InputSystem();     //Input manager object
     
     public static void main()
     {
-         window = new Window(width, height, input);          //Create window and add the screen to it
+         render = new RenderEngine(width, height, input);          //Create window and add the screen to it
     }
 }

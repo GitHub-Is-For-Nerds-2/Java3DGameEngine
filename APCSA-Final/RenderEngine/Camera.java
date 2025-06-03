@@ -5,86 +5,99 @@ import InputSystem.*;
 
 public class Camera
 {   
-    static double[] viewFrom = new double[]{10, 10, 10};        //Cam pos
-    static double[] viweTo = new double[] {1, 1, 1.5};          //Cam rot
+    static double[] camPos = new double[]{10, 10, 10};  //Camera position
+    static double[] camRot = new double[]{0, 0, 0};     //Camera rotation
+                                                        //Array element: 
+                                                        //[0] = x (Left/Right)
+                                                        //[1] = y (Forward/Back)
+                                                        //[3] = z (Up/Down)
     
-    InputManager inputManager;
+    InputSystem inputManager;
     
-    public Camera(InputManager inputs)
+    public Camera(InputSystem inputs)
     {
         this.inputManager = inputs;
     }
     
     void control()
     {
-        Vector viewVector = new Vector(viweTo[0] - viewFrom[0], viweTo[1] - viewFrom[1], viweTo[2] - viewFrom[2]);
+        //Find the vector of the camera location
+        Vector viewVector = new Vector(camRot[0] - camPos[0], camRot[1] - camPos[1], camRot[2] - camPos[2]);
     
-        // Up/Down movement (W/S)
-        if(inputManager.key[4]) // W
+        //Up (W)
+        if(inputManager.key[4])
         {
-            viewFrom[0] += viewVector.x;
-            viewFrom[1] += viewVector.y;
-            viewFrom[2] += viewVector.z;
+            camPos[0] += viewVector.x;
+            camPos[1] += viewVector.y;
+            camPos[2] += viewVector.z;
         
-            viweTo[0] += viewVector.x;
-            viweTo[1] += viewVector.y;
-            viweTo[2] += viewVector.z;
+            camRot[0] += viewVector.x;
+            camRot[1] += viewVector.y;
+            camRot[2] += viewVector.z;
         }
-    
-        if(inputManager.key[6]) // S
-        {
-            viewFrom[0] -= viewVector.x;
-            viewFrom[1] -= viewVector.y;
-            viewFrom[2] -= viewVector.z;
         
-            viweTo[0] -= viewVector.x;
-            viweTo[1] -= viewVector.y;
-            viweTo[2] -= viewVector.z;
+        //Down (S)
+        if(inputManager.key[6])
+        {
+            camPos[0] -= viewVector.x;
+            camPos[1] -= viewVector.y;
+            camPos[2] -= viewVector.z;
+        
+            camRot[0] -= viewVector.x;
+            camRot[1] -= viewVector.y;
+            camRot[2] -= viewVector.z;
         }   
     
-        // Left/Right movement (A/D)
-        Vector verticalVector = new Vector(0, 0, 1);
-        Vector sideViewVector = viewVector.crossProduct(verticalVector);
+        Vector verticalVector = new Vector(0, 0, 1);                        //The global up vector
+        Vector sideViewVector = viewVector.crossProduct(verticalVector);    //The clobal horizontal vector
     
-        if(inputManager.key[5]) // A
+        //Left (A)
+        if(inputManager.key[5])
         {
-            viewFrom[0] += sideViewVector.x;
-            viewFrom[1] += sideViewVector.y;
-            viewFrom[2] += sideViewVector.z;
+            camPos[0] += sideViewVector.x;
+            camPos[1] += sideViewVector.y;
+            camPos[2] += sideViewVector.z;
         
-            viweTo[0] += sideViewVector.x;
-            viweTo[1] += sideViewVector.y;
-            viweTo[2] += sideViewVector.z;
+            camRot[0] += sideViewVector.x;
+            camRot[1] += sideViewVector.y;
+            camRot[2] += sideViewVector.z;
         }
     
-        if(inputManager.key[7]) // D
+        //Right (D)
+        if(inputManager.key[7])
         {
-            viewFrom[0] -= sideViewVector.x;
-            viewFrom[1] -= sideViewVector.y;
-            viewFrom[2] -= sideViewVector.z;
+            camPos[0] -= sideViewVector.x;
+            camPos[1] -= sideViewVector.y;
+            camPos[2] -= sideViewVector.z;
         
-            viweTo[0] -= sideViewVector.x;
-            viweTo[1] -= sideViewVector.y;
-            viweTo[2] -= sideViewVector.z;
+            camRot[0] -= sideViewVector.x;
+            camRot[1] -= sideViewVector.y;
+            camRot[2] -= sideViewVector.z;
         }
 
+        ///////////////DANGER///////////////
+        //The unholy wall of text beyond this point was created with the help
+        //of my friend and several internet sources because I could not figure
+        //out how to make the camera turn based on player input. I have yet to
+        //figure out what any of it means.
+        
         // Camera rotation with arrow keys
         double rotationSpeed = 0.05; // Radians per frame
         double dist = Math.sqrt(
-            (viweTo[0] - viewFrom[0]) * (viweTo[0] - viewFrom[0]) +
-            (viweTo[1] - viewFrom[1]) * (viweTo[1] - viewFrom[1]) +
-            (viweTo[2] - viewFrom[2]) * (viweTo[2] - viewFrom[2])
+            (camRot[0] - camPos[0]) * (camRot[0] - camPos[0]) +
+            (camRot[1] - camPos[1]) * (camRot[1] - camPos[1]) +
+            (camRot[2] - camPos[2]) * (camRot[2] - camPos[2])
         );
 
         if(inputManager.key[0] || inputManager.key[1]) // Left/Right arrow (yaw)
         {
             double yaw = inputManager.key[0] ? -rotationSpeed : rotationSpeed; // Left: negative, Right: positive
             // Rotate around global Z-axis
-            double dx = viweTo[0] - viewFrom[0];
-            double dy = viweTo[1] - viewFrom[1];
+            double dx = camRot[0] - camPos[0];
+            double dy = camRot[1] - camPos[1];
             // Apply 2D rotation in XY plane
-            viweTo[0] = viewFrom[0] + dx * Math.cos(yaw) - dy * Math.sin(yaw);
-            viweTo[1] = viewFrom[1] + dx * Math.sin(yaw) + dy * Math.cos(yaw);
+            camRot[0] = camPos[0] + dx * Math.cos(yaw) - dy * Math.sin(yaw);
+            camRot[1] = camPos[1] + dx * Math.sin(yaw) + dy * Math.cos(yaw);
             // Z remains unchanged for yaw
         }
 
@@ -106,9 +119,9 @@ public class Camera
                 rightVector.z /= rightLength;
             }
             // Rotate viewVector around rightVector using Rodrigues' rotation formula
-            double dx = viweTo[0] - viewFrom[0];
-            double dy = viweTo[1] - viewFrom[1];
-            double dz = viweTo[2] - viewFrom[2];
+            double dx = camRot[0] - camPos[0];
+            double dy = camRot[1] - camPos[1];
+            double dz = camRot[2] - camPos[2];
             double cosTheta = Math.cos(pitch);
             double sinTheta = Math.sin(pitch);
             // Rodrigues' rotation: v' = v * cosθ + (k × v) * sinθ + k * (k · v) * (1 - cosθ)
@@ -126,17 +139,17 @@ public class Camera
                 newDy = newDy * dist / newDist;
                 newDz = newDz * dist / newDist;
             }
-            viweTo[0] = viewFrom[0] + newDx;
-            viweTo[1] = viewFrom[1] + newDy;
-            viweTo[2] = viewFrom[2] + newDz;
+            camRot[0] = camPos[0] + newDx;
+            camRot[1] = camPos[1] + newDy;
+            camRot[2] = camPos[2] + newDz;
             // Clamp pitch to prevent flipping
-            if (Math.abs(viweTo[2] - viewFrom[2]) > dist * 0.99) {
-                viweTo[2] = viewFrom[2] + (viweTo[2] > viewFrom[2] ? dist * 0.99 : -dist * 0.99);
+            if (Math.abs(camRot[2] - camPos[2]) > dist * 0.99) {
+                camRot[2] = camPos[2] + (camRot[2] > camPos[2] ? dist * 0.99 : -dist * 0.99);
                 // Adjust X and Y to maintain distance
-                double remainingDist = Math.sqrt(dist * dist - (viweTo[2] - viewFrom[2]) * (viweTo[2] - viewFrom[2]));
+                double remainingDist = Math.sqrt(dist * dist - (camRot[2] - camPos[2]) * (camRot[2] - camPos[2]));
                 double oldAngle = Math.atan2(dy, dx);
-                viweTo[0] = viewFrom[0] + remainingDist * Math.cos(oldAngle);
-                viweTo[1] = viewFrom[1] + remainingDist * Math.sin(oldAngle);
+                camRot[0] = camPos[0] + remainingDist * Math.cos(oldAngle);
+                camRot[1] = camPos[1] + remainingDist * Math.sin(oldAngle);
             }
         }
     }
