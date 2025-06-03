@@ -1,14 +1,16 @@
+//Import my packages for use
 import InputSystem.*;
 import RenderEngine.*;
 
 public class Main 
 {
+    //I defined the screen size here so its easy to change
     static int width = 1920;
     static int height = 1080;
     
-    static RenderEngine render;                         //Window object
+    static RenderEngine render;                       //Window object
     
-    static InputSystem input = new InputSystem();     //Input manager object
+    static InputSystem input = new InputSystem();     //Create input system object
     
     public static void main()
     {

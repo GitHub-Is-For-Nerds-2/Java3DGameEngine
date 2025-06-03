@@ -1,27 +1,29 @@
 package RenderEngine;
 
+//Java dependencies
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+//My package dependencies
 import Math.*;
 import InputSystem.*;
 
 public class Screen extends JPanel
 {
-    double sleepTime = 1000/30, lastRefresh = 0; //FPS Cap (30), last frame
+    double fpsCap = 1000/30, deltaTime = 0;                                 //FPS Cap (30), time since last frame
 
-    static int numberOfPolygons = 0, numberOf3DPolygons = 0;               //Number of objects in scene
-    static PolygonObject[] drawablePolygons = new PolygonObject[100];      //Objects in scene
-
-    static DPolygon[] DPolygons = new DPolygon[100];
+    static int numberOfPolygons = 0, numberOf3DPolygons = 0;                //Number of objects in scene
     
-    int[] newOrder;
     
-    Camera camera;
+    static PolygonObject[] drawablePolygons = new PolygonObject[100];       //Objects in scene
+    static DPolygon[] DPolygons = new DPolygon[100];                
+    
+    int[] newOrder;                                                         //Order of objects in the scene relative
+                                                                            //to camera view (furthest to closest)
+    
+    Camera camera;                                                          //Camera
 
-    //Where objects on screen are initilized
-    //Called in main method when Screen object is created
     public Screen(InputSystem inputManager)
     {
         //Generate cube
@@ -48,30 +50,34 @@ public class Screen extends JPanel
         setFocusable(true);                 //Make the window be the main window
     }
 
-    //Where objects are drawn
+    //Where objects are drawn. Called every frame when repaint() is called in void update()
     public void paintComponent(Graphics graphics)
     {
-        camera.control();
+        camera.control();                                                                       //Check for camera input to move
         
-        graphics.clearRect(0, 0, RenderEngine.screenWidth, RenderEngine.screenHeight);         //Clear screen for redraw (x, y, screen size x, screen size y)
+        graphics.clearRect(0, 0, RenderEngine.screenWidth, RenderEngine.screenHeight);          //Clear screen for redraw (x, y, screen size x, screen size y)
 
-        graphics.drawString(System.currentTimeMillis() + "", 20, 20);
+        graphics.drawString(System.currentTimeMillis() + "", 20, 20);                           //Draw system time in top right for debug that screen is redrawing
 
+        //Update the polygons (explained further in script)
         for(int i = 0; i < numberOf3DPolygons; i++)
         {
             DPolygons[i].updatePolygon();
         }
         
-        setOrder();
+        setOrder();         //Set the order of the polygons
 
+        //Draw all the polygons in the scene
         for(int i = 0; i < numberOfPolygons; i++)
         {
             drawablePolygons[newOrder[i]].drawPolygon(graphics);
         }
 
-        sleepAndRefresh();  //Update
+        sleep();           //Wait for next frame to update
     }
     
+    //Very basic sorting algorithm to find the order of polygons in the scene from furthest
+    //from the camera to closest
     void setOrder()
     {
         double[] k = new double[numberOfPolygons];
@@ -103,16 +109,16 @@ public class Screen extends JPanel
         }
     }
 
-    //Update screen
-    void sleepAndRefresh()
+    //Sleep till next screen
+    void sleep()
     {
         while(true)
         {
             //Calculate delta time based on current system time compared to last frame time. If it is larger than
             //the FPS cap then run
-            if((System.currentTimeMillis() - lastRefresh) > sleepTime)
+            if((System.currentTimeMillis() - deltaTime) > fpsCap)
             {
-                lastRefresh = System.currentTimeMillis();
+                deltaTime = System.currentTimeMillis();     //Update delta time
                 repaint();                                  //Refresh screen (call paintComponent() again)
                 break;                                      //Get out of loop
             }
@@ -122,7 +128,7 @@ public class Screen extends JPanel
                 //error and run the code in the catch instead of crashing
                 try
                 {
-                    Thread.sleep((long)(System.currentTimeMillis() - lastRefresh));           //Try to sleep the program till next frame
+                    Thread.sleep((long)(System.currentTimeMillis() - deltaTime));           //Try to sleep the program till next frame
                 }
                 catch(Exception e)
                 {
