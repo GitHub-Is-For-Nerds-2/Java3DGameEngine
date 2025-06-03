@@ -25,6 +25,6 @@ Window - main entry point for this package. Creates window and instantiates scre
          further use and input system to added to screen and then sent to camera
 Screen - where the screen is created, drawn and updated
 Camera - Camera movement and related math
-PolygonObject - Where primitive (2D) polygons were created (should be removed in favor of DPolygon)
-DPolygon - 3D polygons object
+PolygonObject - Where primitive (2D) polygons were created (should be removed in favor of Polygon3D but Polygon3D relys on it)
+Polygon3D - 3D polygons object
 Calculator - Where the 3D word space and 2D camera space are calculated and sent to screen for rendering

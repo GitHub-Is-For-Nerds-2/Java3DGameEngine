@@ -2,15 +2,15 @@ package RenderEngine;
 
 import java.awt.*;
 
-public class DPolygon
+public class Polygon3D
 {
-    double[] x, y, z;
+    double[] x, y, z;   //Position of polygon 
 
-    Color color;
+    Color color;        //Color
 
-    int poly = 0;   //The polygon number
+    int polygonNumber = 0;       //The polygon identity number
 
-    public DPolygon(double[] x, double[] y, double[] z, Color color)
+    public Polygon3D(double[] x, double[] y, double[] z, Color color)
     {
         Screen.numberOf3DPolygons++;
         this.x = x;
@@ -24,7 +24,7 @@ public class DPolygon
 
     void createPolygon()
     {
-        poly = Screen.numberOfPolygons;
+        polygonNumber = Screen.numberOfPolygons;
 
         Screen.drawablePolygons[Screen.numberOfPolygons] = new PolygonObject(new double[]{}, new double[]{}, color);
         
@@ -33,7 +33,7 @@ public class DPolygon
 
     void updatePolygon()
     {
-        //Offset to center
+        //Offset to center. The -50 multiplier ajust for weird geomatry scaling based on screen location and normalizes it
         double dx = - 50 * Calculator.calculatePositionX(Camera.camPos, Camera.camRot, Camera.camRot[0], Camera.camRot[1], Camera.camRot[2]);
         double dy = - 50 * Calculator.calculatePositionY(Camera.camPos, Camera.camRot, Camera.camRot[0], Camera.camRot[1], Camera.camRot[2]);
         
@@ -46,26 +46,23 @@ public class DPolygon
             newY[i] = dy + RenderEngine.screenHeight/2 + 50 * Calculator.calculatePositionY(Camera.camPos, Camera.camRot, x[i], y[i], z[i]);
         }
 
-        Screen.drawablePolygons[poly] = new PolygonObject(newX, newY, color);
-        Screen.drawablePolygons[poly].aveDist = getDist();
+        //Replace polygon with new polygon with updated position
+        Screen.drawablePolygons[polygonNumber] = new PolygonObject(newX, newY, color);
+        Screen.drawablePolygons[polygonNumber].aveDist = getDist();
         Screen.numberOfPolygons --;     //Make sure it doesn't add a polygon when the object is redrawn
     }
     
+    //Get the average distance between the polygon position and camera position
     double getDist()
     {
         double total = 0;
         for(int i = 0; i < x.length; i++)
         {
-            total += getDistanceToP(i);
+            total += Math.sqrt((Camera.camPos[0] - x[i])*(Camera.camPos[0] - x[i]) 
+                       + (Camera.camPos[1] - y[i])*(Camera.camPos[1] - y[i])
+                       + (Camera.camPos[2] - z[i])*(Camera.camPos[2] - z[i]));
         }
         
         return total / x.length; 
-    }
-    
-    double getDistanceToP(int i)
-    {
-        return Math.sqrt((Camera.camPos[0] - x[i])*(Camera.camPos[0] - x[i]) 
-                       + (Camera.camPos[1] - y[i])*(Camera.camPos[1] - y[i])
-                       + (Camera.camPos[2] - z[i])*(Camera.camPos[2] - z[i]));
     }
 }

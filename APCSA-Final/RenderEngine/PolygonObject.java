@@ -25,7 +25,6 @@ public class PolygonObject
 
     void drawPolygon(Graphics graphics)
     {
-        //Color variable isn't working. REMOVE
         graphics.setColor(color);
         graphics.fillPolygon(polygon);
         

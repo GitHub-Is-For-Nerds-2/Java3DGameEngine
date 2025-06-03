@@ -79,7 +79,8 @@ public class Camera
         //The unholy wall of text beyond this point was created with the help
         //of my friend and several internet sources because I could not figure
         //out how to make the camera turn based on player input. I have yet to
-        //figure out what any of it means.
+        //figure out what any of it means. Lot of is randomly copy and pasted 
+        //and I'm to afraid to change it yet.
         
         // Camera rotation with arrow keys
         double rotationSpeed = 0.05; // Radians per frame

@@ -17,7 +17,7 @@ public class Screen extends JPanel
     
     
     static PolygonObject[] drawablePolygons = new PolygonObject[100];       //Objects in scene
-    static DPolygon[] DPolygons = new DPolygon[100];                
+    static Polygon3D[] DPolygons = new Polygon3D[100];                
     
     int[] newOrder;                                                         //Order of objects in the scene relative
                                                                             //to camera view (furthest to closest)
@@ -27,19 +27,19 @@ public class Screen extends JPanel
     public Screen(InputSystem inputManager)
     {
         //Generate cube
-        DPolygons[numberOf3DPolygons] = new DPolygon(new double[]{0, 2, 2, 0}, new double[]{0, 0, 2, 2}, new double[]{0, 0, 0, 0}, Color.gray);
-        DPolygons[numberOf3DPolygons] = new DPolygon(new double[]{0, 2, 2, 0}, new double[]{0, 0, 2, 2}, new double[]{3, 3, 3, 3}, Color.gray);
-        DPolygons[numberOf3DPolygons] = new DPolygon(new double[]{0, 2, 2, 0}, new double[]{0, 0, 0, 0}, new double[]{0, 0, 3, 3}, Color.gray);
-        DPolygons[numberOf3DPolygons] = new DPolygon(new double[]{0, 2, 2, 0}, new double[]{2, 2, 2, 2}, new double[]{0, 0, 3, 3}, Color.gray);
-        DPolygons[numberOf3DPolygons] = new DPolygon(new double[]{0, 0, 0, 0}, new double[]{0, 2, 2, 0}, new double[]{0, 0, 3, 3}, Color.gray);
-        DPolygons[numberOf3DPolygons] = new DPolygon(new double[]{2, 2, 2, 2}, new double[]{0, 2, 2, 0}, new double[]{0, 0, 3, 3}, Color.gray);
+        DPolygons[numberOf3DPolygons] = new Polygon3D(new double[]{0, 2, 2, 0}, new double[]{0, 0, 2, 2}, new double[]{0, 0, 0, 0}, Color.gray);
+        DPolygons[numberOf3DPolygons] = new Polygon3D(new double[]{0, 2, 2, 0}, new double[]{0, 0, 2, 2}, new double[]{3, 3, 3, 3}, Color.gray);
+        DPolygons[numberOf3DPolygons] = new Polygon3D(new double[]{0, 2, 2, 0}, new double[]{0, 0, 0, 0}, new double[]{0, 0, 3, 3}, Color.gray);
+        DPolygons[numberOf3DPolygons] = new Polygon3D(new double[]{0, 2, 2, 0}, new double[]{2, 2, 2, 2}, new double[]{0, 0, 3, 3}, Color.gray);
+        DPolygons[numberOf3DPolygons] = new Polygon3D(new double[]{0, 0, 0, 0}, new double[]{0, 2, 2, 0}, new double[]{0, 0, 3, 3}, Color.gray);
+        DPolygons[numberOf3DPolygons] = new Polygon3D(new double[]{2, 2, 2, 2}, new double[]{0, 2, 2, 0}, new double[]{0, 0, 3, 3}, Color.gray);
         
         //Generate Floor
         for(int i = -4; i < 5; i++)
         {
             for(int j = -4; j < 5; j++)
             {
-                DPolygons[numberOf3DPolygons] = new DPolygon(new double[]{i, i, i + 1, i + 1}, new double[]{j, j + 1, j + 1, j}, new double[]{0, 0, 0, 0}, Color.green);
+                DPolygons[numberOf3DPolygons] = new Polygon3D(new double[]{i, i, i + 1, i + 1}, new double[]{j, j + 1, j + 1, j}, new double[]{0, 0, 0, 0}, Color.green);
             }
         }
         
