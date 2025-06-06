@@ -10,18 +10,18 @@ public class Calculator
     //Get 2D x location from 3D X Y Z location
     static double calculatePositionX(double[] camPos, double[] camRot, double x, double y, double z)
     {
-        setStuff(camPos, camRot, x, y, z);
+        worldToCamPos(camPos, camRot, x, y, z);
         return drawX;
     }
     
     //Get 2D y location from 3D X Y Z location
     static double calculatePositionY(double[] viewFrom, double[] camRot, double x, double y, double z)
     {
-        setStuff(viewFrom, camRot, x, y, z);
+        worldToCamPos(viewFrom, camRot, x, y, z);
         return drawY;
     }
     
-    static void setStuff(double[] camPos, double[] camRot, double x, double y, double z)
+    static void worldToCamPos(double[] camPos, double[] camRot, double x, double y, double z)
     {
         //Direction the camera is looking
         Vector viewVector = new Vector(camRot[0] - camPos[0], camRot[1] - camPos[1], camRot[2] - camPos[2]);
